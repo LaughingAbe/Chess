@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ZIM - Code Creativity</title>
+
+<!-- zimjs.com - JavaScript Canvas Framework -->
+<script type="module">
+
+import zim from "https://zimjs.org/cdn/016/zim";
+
+// See Docs under Frame for FIT, FILL, FULL, and TAG
+var frame = new Frame(FIT, 1200, 800, light, dark, ready);
+
+function ready() {
+
+    let count = 0;
+    let stage = frame.stage;
+    let stageWidth = frame.width;
+    let stageHeight = frame.height;
+
+    let holder = new Container();
+    let circleCoordinates = [];
+    let circleCoordinatesWhite = [];
+    let rookCoordinates = [];
+    let rookCoordinatesWhite = [];
+    let bishopCoordinatesWhite = [];
+    let bishopCoordinatesBlack = [];
+    let knightCoordinatesWhite = [];
+    let knightCoordinatesBlack = [];
+    let kingCoordinatesWhite;
+    let kingCoordinatesBlack;
+    let queenCoordinatesWhite;
+    let queenCoordinatesBlack;
+    let pawnContainerBlack = [];
+    let pawnContainerWhite = [];
+    let allPieces = pawnContainerBlack.concat(pawnContainerWhite);
+    let activePiece = null;
+    // let activePieceWhite = null;
+    // let activePieceBlack = null;
+    let activePieceOriginalColor = null;
+    let isWhiteTurn = true;                 // Define variables to track game state
+
+    zog("Starting");
+    const rectangle = new Rectangle(50,50,yellow,blue).centerReg({add: false});
+    const tiles = new Tile(rectangle, 8, 8)
+        .center()
+        .rot(45)
+        //.drag()
+        .addTo(holder)
+        ;
+
+    // Checker board pattern
+    loop (tiles, t => {
+        if (((t.x + t.y)/50)%2 == 0){
+            t.color = white;
+        } 
+        else {
+            t.color = black;
+        }
+
+        // Black rooks
+        if ((t.x == 25)&&((t.y == 25)||(t.y == (25 + 50*7)))){
+            rookCoordinates.push(tiles.localToGlobal(t.x, t.y));
+        }
+
+        // Black bishops
+        if ((t.x == 25)&&((t.y == 25 + 50*2)||(t.y == (25 + 50*5)))){
+            bishopCoordinatesBlack.push(tiles.localToGlobal(t.x, t.y));
+        }
+
+        // Black knights
+        if ((t.x == 25)&&((t.y == 25 + 50*1)||(t.y == (25 + 50*6)))){
+            knightCoordinatesBlack.push(tiles.localToGlobal(t.x, t.y));
+        }
+
+        // Black queen
+        if ((t.x == 25)&&(t.y == 25 + 50*4)){
+            queenCoordinatesBlack = tiles.localToGlobal(t.x, t.y);
+        }
+
+        // Black king
+        if ((t.x == 25)&&(t.y == 25 + 50*3)){
+            kingCoordinatesBlack = tiles.localToGlobal(t.x, t.y);
+        }
+
+        // Black pawns
+        if (t.x == (25 + 50)){
+            circleCoordinates.push(tiles.localToGlobal(t.x, t.y));
+        }
+
+        // White pawns
+        if (t.x == (25 + 6*50)){
+            circleCoordinatesWhite.push(tiles.localToGlobal(t.x, t.y));
+        }
+
+        // White rooks
+        if ((t.x == 25 + 50*7)&&((t.y == 25)||(t.y == (25 + 50*7)))){
+            rookCoordinatesWhite.push(tiles.localToGlobal(t.x, t.y));
+        }
+
+        // White bishops
+        if ((t.x == 25 + 50*7)&&((t.y == 25 + 50*2)||(t.y == (25 + 50*5)))){
+            bishopCoordinatesWhite.push(tiles.localToGlobal(t.x, t.y));
+        } 
+        
+        // White knights
+        if ((t.x == 25 + 50*7)&&((t.y == 25 + 50*1)||(t.y == (25 + 50*6)))){
+            knightCoordinatesWhite.push(tiles.localToGlobal(t.x, t.y));
+        }
+
+        // White queen
+        if ((t.x == 25 + 50*7)&&(t.y == 25 + 50*4)){
+            queenCoordinatesWhite = tiles.localToGlobal(t.x, t.y);
+        }
+
+        // White king
+        if ((t.x == 25 + 50*7)&&(t.y == 25 + 50*3)){
+            kingCoordinatesWhite = tiles.localToGlobal(t.x, t.y);
+        }
+    })
+
+    holder.addTo(stage)
+        .sca(2,1)
+        .center();
+
+    // tiles.on("mouseover", function(e){
+    //     e.target.color = pink;
+    //     stage.update();
+    // });
+
+    // tiles.on("mouseout", function(e){
+    //     e.target.color = yellow;
+    //     stage.update();
+    // });
+
+    //var ball = new Circle(40, blue, black).center().sha();
+
+    //Black rooks
+    for (let i = 0; i<rookCoordinates.length; i++){
+        pawnContainerBlack.push(
+            new Rectangle(85, 85, dark, black)
+                .centerReg()
+                .pos(rookCoordinates[i].x * 2 - 50 * 4.8, rookCoordinates[i].y - 3 * 50)
+                .sha()
+                .tap((event) => {           
+                    handlePieceSelection(event.currentTarget, dark);
+                })
+        );
+        //var rook = new Rectangle(85, 85, dark, black).pos(rookCoordinates[i].x*2 - 50*4.8, rookCoordinates[i].y-3*50).sha();
+    }
+
+    //Black bishops
+    for (let i = 0; i<bishopCoordinatesBlack.length; i++){
+        pawnContainerBlack.push(
+            new Triangle(85, 85, 85, dark, black)
+                .centerReg()
+                .pos(bishopCoordinatesBlack[i].x*2 - 50*4.8, bishopCoordinatesBlack[i].y-3*50)
+                .sha()
+                .tap((event) => {           
+                    handlePieceSelection(event.currentTarget, dark);
+                })
+        );
+        //var bishop = new Triangle(85, 85, 85, dark, black).pos(bishopCoordinatesBlack[i].x*2 - 50*4.8, bishopCoordinatesBlack[i].y-3*50).sha();
+    }
+
+    //Black knights
+    for (let i = 0; i<knightCoordinatesBlack.length; i++){
+        pawnContainerBlack.push(
+            new Circle(45, dark, black)
+                .centerReg()
+                .pos(knightCoordinatesBlack[i].x*2 - 50*4.8, knightCoordinatesBlack[i].y-3*50)
+                .sha()
+                .tap((event) => {           
+                    handlePieceSelection(event.currentTarget, dark);
+                })
+        );
+        //var knight = new Circle(45, dark, black).pos(knightCoordinatesBlack[i].x*2 - 50*4.8, knightCoordinatesBlack[i].y-3*50).sha();
+    }
+
+    //Black king
+    //var kingBlack = new Rectangle(85, 110, dark, black).pos(kingCoordinatesBlack.x*2 - 50*4.8, kingCoordinatesBlack.y-3.5*50).sha();
+    pawnContainerBlack.push(
+        new Rectangle(85, 110, dark, black)
+            .centerReg()
+            .pos(kingCoordinatesBlack.x*2 - 50*4.8, kingCoordinatesBlack.y-3*50)
+            .sha()
+            .tap((event) => {           
+                handlePieceSelection(event.currentTarget, dark);
+            })
+    );
+    
+    //Black Queen
+    pawnContainerBlack.push(
+        new Rectangle(85, 110, dark, black)
+            .centerReg()
+            .pos(queenCoordinatesBlack.x*2 - 50*4.8, queenCoordinatesBlack.y-3.5*50)
+            .sha()
+            .tap((event) => {           
+                handlePieceSelection(event.currentTarget, dark);
+            })
+    );
+    //var queenBlack = new Rectangle(85, 110, dark, black).pos(queenCoordinatesBlack.x*2 - 50*4.8, queenCoordinatesBlack.y-3.5*50).sha();
+    
+    //Black pawns
+    for (let i = 0; i < circleCoordinates.length; i++){
+        pawnContainerBlack.push(
+            new Circle(40, dark, black)
+                .pos(circleCoordinates[i].x*2 - 50*4.8, circleCoordinates[i].y-3*50)
+                .tap((event) => {           
+                    handlePieceSelection(event.currentTarget, dark);
+                })
+        );
+        // pawnContainerBlack.push(
+        //     new Circle(40, dark, black)
+        //         .pos(circleCoordinates[i].x*2 - 50*4.8, circleCoordinates[i].y-3*50)
+        //         // .tap((event)=>{           
+        //         //     if(activePiece){
+        //         //         if (activePieceOriginalColor == white) {
+        //         //             // Change the color of the previously selected piece back to its original color
+        //         //             activePiece.color = white;
+        //         //         }
+        //         //         else {
+        //         //             activePiece.color = dark;
+        //         //         }
+        //         //     }
+        //         //     // Update the active piece to the clicked piece
+        //         //     activePiece = event.currentTarget;
+        //         //     activePiece.color = red;
+        //         //     activePieceOriginalColor = dark;
+        //         //     //event.currentTarget.color = red;
+        //         //     stage.update();                                 
+        //         // })
+        // );
+    }
+
+    //White pawns
+    for (let i = 0; i < circleCoordinatesWhite.length; i++){
+
+        pawnContainerWhite.push(
+            new Circle(40, white, black)
+                .centerReg()
+                .pos(circleCoordinatesWhite[i].x*2 - 50*4.8, circleCoordinatesWhite[i].y-3*50)
+                .sha()
+                .tap((event) => {           
+                    handlePieceSelection(event.currentTarget, white);
+                })
+        );
+
+        // pawnContainerWhite.push(
+        //     new Circle(40, white, black).pos(circleCoordinatesWhite[i].x*2 - 50*4.8, circleCoordinatesWhite[i].y-3*50)
+        //     .sha()
+        //     // .tap((event)=>{
+        //     //     if(activePiece){
+        //     //         if (activePieceOriginalColor == white) {
+        //     //             // Change the color of the previously selected piece back to its original color
+        //     //             activePiece.color = white;
+        //     //         }
+        //     //         else {
+        //     //             activePiece.color = dark;
+        //     //         }
+        //     //     }
+                      
+        //     //     activePiece = event.currentTarget;
+        //     //     activePiece.color = red;
+        //     //     activePieceOriginalColor = white; 
+        //     //     //event.currentTarget.color = red;
+        //     //     stage.update();
+        //     // })    
+        // );
+    }   
+
+    for (let i = 0; i < rookCoordinatesWhite.length; i++){
+        //var rook = new Rectangle(85, 85, white, black).pos(rookCoordinatesWhite[i].x*2 - 50*4.8, rookCoordinatesWhite[i].y-3*50).sha();
+        pawnContainerWhite.push(
+            new Rectangle(85, 85, white, black)
+                .centerReg()
+                .pos(rookCoordinatesWhite[i].x * 2 - 50 * 4.8, rookCoordinatesWhite[i].y - 3 * 50)
+                .sha()
+                .tap((event) => {           
+                    handlePieceSelection(event.currentTarget, white);
+                })
+        );
+    }
+
+    for (let i = 0; i<bishopCoordinatesWhite.length; i++){
+        pawnContainerWhite.push(
+            new Triangle(85, 85, 85, white, black)
+                .centerReg()
+                .pos(bishopCoordinatesWhite[i].x*2 - 50*4.8, bishopCoordinatesWhite[i].y-3*50)
+                .sha()
+                .tap((event) => {           
+                    handlePieceSelection(event.currentTarget, white);
+                })
+        );
+        //var bishop = new Triangle(85, 85, 85, white, black).pos(bishopCoordinatesWhite[i].x*2 - 50*4.8, bishopCoordinatesWhite[i].y-3*50).sha();
+    }
+
+    for (let i = 0; i<knightCoordinatesBlack.length; i++){
+        pawnContainerWhite.push(
+            new Circle(45, white, black)
+                .centerReg()
+                .pos(knightCoordinatesWhite[i].x*2 - 50*4.8, knightCoordinatesWhite[i].y-3*50)
+                .sha()
+                .tap((event) => {           
+                    handlePieceSelection(event.currentTarget, white);
+                })
+        );
+        //var knight = new Circle(45, white, black).pos(knightCoordinatesWhite[i].x*2 - 50*4.8, knightCoordinatesWhite[i].y-3*50).sha();
+    }
+
+    // White king
+    pawnContainerWhite.push(
+        new Rectangle(85, 110, white, black)
+            .centerReg()
+            .pos(kingCoordinatesWhite.x*2 - 50*4.8, kingCoordinatesWhite.y-3.5*50)
+            .sha()
+            .tap((event) => {           
+                handlePieceSelection(event.currentTarget, white);
+            })
+    );
+    //var kingWhite = new Rectangle(85, 110, white, black).pos(kingCoordinatesWhite.x*2 - 50*4.8, kingCoordinatesWhite.y-3.5*50).sha();
+    
+    //White queen
+    pawnContainerWhite.push(
+        new Rectangle(85, 110, white, black)
+            .centerReg()
+            .pos(queenCoordinatesWhite.x*2 - 50*4.8, queenCoordinatesWhite.y-3.5*50)
+            .sha()
+            .tap((event) => {           
+                handlePieceSelection(event.currentTarget, white);
+            })
+    );
+        
+    tiles.on("click", function(e){
+        var point = tiles.localToGlobal(e.target.x, e.target.y);
+        if (activePiece){
+            zog("Animating before changing game state");
+
+            // // Calculate the distance to move
+            // let dx = (point.x-40) - activePiece.x;
+            // let dy = (point.y-75) - activePiece.y;
+
+            // Animate the movement
+            activePiece.animate([
+                {
+                    props: 
+                    {
+                        x: point.x,
+                        y: point.y - 25
+                    }
+                ,
+                time: 0.5,
+                events:true
+                }
+            ]);
+            zog("After Animating before changing game state");
+
+            let capturedPiece = null;
+            allPieces = pawnContainerBlack.concat(pawnContainerWhite);
+            //zog("allPIeces: " + allPieces);
+            for (let piece of allPieces) {
+                // zog("piece of allPieces");
+                // // Check if the piece is not the active piece and is at the target square
+                // zog("piece: " + piece);
+                // zog("activePiece: " + activePiece);
+                 zog("piece.x: " + piece.x);
+                 zog("point.x: " + point.x);
+                 zog("piece.y: " + piece.y);
+                 zog("point.y: " + point.y);
+                 zog(piece !== activePiece);
+                 zog((piece.x - point.x)**2 < 200);
+                 zog((piece.y - point.y)**2 < 200);
+                 count += 1;
+                 zog("count: " + count);
+
+                if ((piece !== activePiece) && ((piece.x - point.x)**2 < 200) && ((piece.y - point.y)**2 < 1600)) {
+                    zog("Piece captured");
+                    zog("piece.x: " + piece.x);
+                    zog("point.x: " + point.x);
+                    zog("piece.y: " + piece.y);
+                    zog("point.y: " + point.y);
+                    zog((piece.x - point.x)**2);
+                    zog((piece.y - point.y)**2);
+
+                    capturedPiece = piece;
+                    break;
+                }
+            }
+
+            // Remove the captured piece from the stage
+            if (capturedPiece) {
+                capturedPiece.removeFrom(stage);
+                //stage.removeChild(capturedPiece);
+                capturedPiece = null;
+                zog("Piece removed");
+                // Remove the captured piece from its container
+                // let index = capturedPiece.container.indexOf(capturedPiece);
+                // if (index !== -1) {
+                //     capturedPiece.container.splice(index, 1);
+                // }
+            }
+
+            // Listen for the completion of the animation
+            //activePiece.on("complete", function() {
+                
+                // Update game state, check for captures, etc.
+                zog("isWhiteTurn before: " + isWhiteTurn);
+                //if another piece is occupying the square, remove it from the stage
+
+                isWhiteTurn = !isWhiteTurn;
+
+                zog("isWhiteTurn after: " + isWhiteTurn);
+                if(activePiece){
+                    // Change the color of the previously selected piece back to its original color
+                    activePiece.color = activePieceOriginalColor;
+                }
+                activePiece = null;
+                activePieceOriginalColor = null;
+                zog("animation finished");
+                stage.update();
+            //});
+
+            
+        }
+        //stage.update();
+    });
+
+    holder.on("click", function(e) {
+        if (e.target.children && e.target.children.length > 0) {
+            let child = e.target.children[0]; // Assuming there is only one child Circle
+            if (child.constructor === Circle) {
+                child.color = blue; // For testing purposes, change the color to blue
+                stage.update();
+            }
+        }
+
+        if(activePiece){
+            // Change the color of the previously selected piece back to its original color
+            activePiece.color = activePieceOriginalColor;
+        }
+
+        activePiece = null;
+        activePieceOriginalColor = null;
+    });
+
+    // Function to handle piece selection
+    function handlePieceSelection(piece, originalColor) {
+        zog("isWhiteTurn: " + isWhiteTurn);
+        zog("originalColour: " + originalColor);
+        // zog("pawnContainerWhite: " + pawnContainerWhite);
+        // zog("pawnContainerBlack: " + pawnContainerBlack);
+        if((isWhiteTurn && (originalColor == "#ffffff"))||(!isWhiteTurn && (originalColor == dark))) {
+            zog("Piece selected");
+        //if ((isWhiteTurn && piece.container === pawnContainerWhite) || (!isWhiteTurn && piece.container === pawnContainerBlack)) {
+            // Change the color of the previously selected piece back to its original color
+            if (activePiece) {
+                // Change the color of the previously selected piece back to its original color
+                activePiece.color = activePieceOriginalColor;
+            }
+            // Update the active piece to the clicked piece and set its color to red
+            activePiece = piece;
+            activePiece.color = red;
+            activePieceOriginalColor = originalColor;
+            stage.update();
+            
+        }
+
+        zog("Capturing check on second click");
+        zog(!isWhiteTurn && (originalColor == dark));
+        zog(isWhiteTurn && (originalColor == white));
+        zog(activePiece);
+        zog(((!isWhiteTurn && (originalColor == "#ffffff"))||(isWhiteTurn && (originalColor == dark)))&&(activePiece));
+        if(((!isWhiteTurn && (originalColor == "#ffffff"))||(isWhiteTurn && (originalColor == dark)))&&(activePiece)) {
+            zog("Logic gate passed for secondary selection");
+            activePiece.animate([
+                {
+                    props: 
+                    {
+                        x: piece.x,
+                        y: piece.y// - 25
+                    }
+                ,
+                time: 0.5,
+                events:true
+                }
+            ]);
+            piece.removeFrom(stage);
+            if(activePiece){
+                // Change the color of the previously selected piece back to its original color
+                activePiece.color = activePieceOriginalColor;
+                isWhiteTurn = !isWhiteTurn;
+            }
+
+        activePiece = null;
+        activePieceOriginalColor = null;
+            stage.update();
+        }   
+    }
+  
+    stage.update();
+    zog("finished");   
+} // end ready
+
+</script>
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+</head>
+<body></body>
+</html>
