@@ -32,9 +32,11 @@ function ready() {
     let kingCoordinatesBlack;
     let queenCoordinatesWhite;
     let queenCoordinatesBlack;
-    let pawnContainerBlack = [];
-    let pawnContainerWhite = [];
-    let allPieces = pawnContainerBlack.concat(pawnContainerWhite);
+    let whitePawns = [];
+    let blackPawns = [];
+    let ContainerBlack = [];
+    let ContainerWhite = [];
+    let allPieces = ContainerBlack.concat(ContainerWhite);
     let activePiece = null;
     // let activePieceWhite = null;
     // let activePieceBlack = null;
@@ -138,7 +140,7 @@ function ready() {
 
     //Black rooks
     for (let i = 0; i<rookCoordinates.length; i++){
-        pawnContainerBlack.push(
+        ContainerBlack.push(
             new Rectangle(85, 85, dark, black)
                 .centerReg()
                 .pos(rookCoordinates[i].x * 2 - 50 * 4.8, rookCoordinates[i].y - 3 * 50)
@@ -152,7 +154,7 @@ function ready() {
 
     //Black bishops
     for (let i = 0; i<bishopCoordinatesBlack.length; i++){
-        pawnContainerBlack.push(
+        ContainerBlack.push(
             new Triangle(85, 85, 85, dark, black)
                 .centerReg()
                 .pos(bishopCoordinatesBlack[i].x*2 - 50*4.8, bishopCoordinatesBlack[i].y-3*50)
@@ -166,7 +168,7 @@ function ready() {
 
     //Black knights
     for (let i = 0; i<knightCoordinatesBlack.length; i++){
-        pawnContainerBlack.push(
+        ContainerBlack.push(
             new Circle(45, dark, black)
                 .centerReg()
                 .pos(knightCoordinatesBlack[i].x*2 - 50*4.8, knightCoordinatesBlack[i].y-3*50)
@@ -180,7 +182,7 @@ function ready() {
 
     //Black king
     //var kingBlack = new Rectangle(85, 110, dark, black).pos(kingCoordinatesBlack.x*2 - 50*4.8, kingCoordinatesBlack.y-3.5*50).sha();
-    pawnContainerBlack.push(
+    ContainerBlack.push(
         new Rectangle(85, 110, dark, black)
             .centerReg()
             .pos(kingCoordinatesBlack.x*2 - 50*4.8, kingCoordinatesBlack.y-3*50)
@@ -191,7 +193,7 @@ function ready() {
     );
     
     //Black Queen
-    pawnContainerBlack.push(
+    ContainerBlack.push(
         new Rectangle(85, 110, dark, black)
             .centerReg()
             .pos(queenCoordinatesBlack.x*2 - 50*4.8, queenCoordinatesBlack.y-3.5*50)
@@ -204,50 +206,31 @@ function ready() {
     
     //Black pawns
     for (let i = 0; i < circleCoordinates.length; i++){
-        pawnContainerBlack.push(
+        ContainerBlack.push(
             new Circle(40, dark, black)
                 .pos(circleCoordinates[i].x*2 - 50*4.8, circleCoordinates[i].y-3*50)
                 .tap((event) => {           
                     handlePieceSelection(event.currentTarget, dark);
                 })
         );
-        // pawnContainerBlack.push(
-        //     new Circle(40, dark, black)
-        //         .pos(circleCoordinates[i].x*2 - 50*4.8, circleCoordinates[i].y-3*50)
-        //         // .tap((event)=>{           
-        //         //     if(activePiece){
-        //         //         if (activePieceOriginalColor == white) {
-        //         //             // Change the color of the previously selected piece back to its original color
-        //         //             activePiece.color = white;
-        //         //         }
-        //         //         else {
-        //         //             activePiece.color = dark;
-        //         //         }
-        //         //     }
-        //         //     // Update the active piece to the clicked piece
-        //         //     activePiece = event.currentTarget;
-        //         //     activePiece.color = red;
-        //         //     activePieceOriginalColor = dark;
-        //         //     //event.currentTarget.color = red;
-        //         //     stage.update();                                 
-        //         // })
-        // );
     }
 
     //White pawns
     for (let i = 0; i < circleCoordinatesWhite.length; i++){
-
-        pawnContainerWhite.push(
-            new Circle(40, white, black)
+        //ContainerWhite.push( 
+            let pawn = new Circle(40, white, black)
                 .centerReg()
                 .pos(circleCoordinatesWhite[i].x*2 - 50*4.8, circleCoordinatesWhite[i].y-3*50)
                 .sha()
                 .tap((event) => {           
                     handlePieceSelection(event.currentTarget, white);
                 })
-        );
+            whitePawns.push(pawn);
+            ContainerWhite.push(pawn);
+        //);
+    }
 
-        // pawnContainerWhite.push(
+        // ContainerWhite.push(
         //     new Circle(40, white, black).pos(circleCoordinatesWhite[i].x*2 - 50*4.8, circleCoordinatesWhite[i].y-3*50)
         //     .sha()
         //     // .tap((event)=>{
@@ -268,11 +251,11 @@ function ready() {
         //     //     stage.update();
         //     // })    
         // );
-    }   
+       
 
     for (let i = 0; i < rookCoordinatesWhite.length; i++){
         //var rook = new Rectangle(85, 85, white, black).pos(rookCoordinatesWhite[i].x*2 - 50*4.8, rookCoordinatesWhite[i].y-3*50).sha();
-        pawnContainerWhite.push(
+        ContainerWhite.push(
             new Rectangle(85, 85, white, black)
                 .centerReg()
                 .pos(rookCoordinatesWhite[i].x * 2 - 50 * 4.8, rookCoordinatesWhite[i].y - 3 * 50)
@@ -284,7 +267,7 @@ function ready() {
     }
 
     for (let i = 0; i<bishopCoordinatesWhite.length; i++){
-        pawnContainerWhite.push(
+        ContainerWhite.push(
             new Triangle(85, 85, 85, white, black)
                 .centerReg()
                 .pos(bishopCoordinatesWhite[i].x*2 - 50*4.8, bishopCoordinatesWhite[i].y-3*50)
@@ -297,7 +280,7 @@ function ready() {
     }
 
     for (let i = 0; i<knightCoordinatesBlack.length; i++){
-        pawnContainerWhite.push(
+        ContainerWhite.push(
             new Circle(45, white, black)
                 .centerReg()
                 .pos(knightCoordinatesWhite[i].x*2 - 50*4.8, knightCoordinatesWhite[i].y-3*50)
@@ -310,7 +293,8 @@ function ready() {
     }
 
     // White king
-    pawnContainerWhite.push(
+    ContainerWhite.push(
+
         new Rectangle(85, 110, white, black)
             .centerReg()
             .pos(kingCoordinatesWhite.x*2 - 50*4.8, kingCoordinatesWhite.y-3.5*50)
@@ -322,7 +306,7 @@ function ready() {
     //var kingWhite = new Rectangle(85, 110, white, black).pos(kingCoordinatesWhite.x*2 - 50*4.8, kingCoordinatesWhite.y-3.5*50).sha();
     
     //White queen
-    pawnContainerWhite.push(
+    ContainerWhite.push(
         new Rectangle(85, 110, white, black)
             .centerReg()
             .pos(queenCoordinatesWhite.x*2 - 50*4.8, queenCoordinatesWhite.y-3.5*50)
@@ -357,7 +341,7 @@ function ready() {
             zog("After Animating before changing game state");
 
             let capturedPiece = null;
-            allPieces = pawnContainerBlack.concat(pawnContainerWhite);
+            allPieces = ContainerBlack.concat(ContainerWhite);
             //zog("allPIeces: " + allPieces);
             for (let piece of allPieces) {
                 // zog("piece of allPieces");
@@ -448,11 +432,11 @@ function ready() {
     function handlePieceSelection(piece, originalColor) {
         zog("isWhiteTurn: " + isWhiteTurn);
         zog("originalColour: " + originalColor);
-        // zog("pawnContainerWhite: " + pawnContainerWhite);
-        // zog("pawnContainerBlack: " + pawnContainerBlack);
+        // zog("ContainerWhite: " + ContainerWhite);
+        // zog("ContainerBlack: " + ContainerBlack);
         if((isWhiteTurn && (originalColor == "#ffffff"))||(!isWhiteTurn && (originalColor == dark))) {
             zog("Piece selected");
-        //if ((isWhiteTurn && piece.container === pawnContainerWhite) || (!isWhiteTurn && piece.container === pawnContainerBlack)) {
+        //if ((isWhiteTurn && piece.container === ContainerWhite) || (!isWhiteTurn && piece.container === ContainerBlack)) {
             // Change the color of the previously selected piece back to its original color
             if (activePiece) {
                 // Change the color of the previously selected piece back to its original color
@@ -473,19 +457,61 @@ function ready() {
         zog(((!isWhiteTurn && (originalColor == "#ffffff"))||(isWhiteTurn && (originalColor == dark)))&&(activePiece));
         if(((!isWhiteTurn && (originalColor == "#ffffff"))||(isWhiteTurn && (originalColor == dark)))&&(activePiece)) {
             zog("Logic gate passed for secondary selection");
-            activePiece.animate([
-                {
-                    props: 
-                    {
-                        x: piece.x,
-                        y: piece.y// - 25
-                    }
-                ,
+
+            // Example of animating activePiece followed by piece in series
+            activePiece.animate({
+                props: {
+                    x: piece.x,
+                    y: piece.y //- 25
+                },
                 time: 0.5,
-                events:true
+                call: () => {
+                    piece.animate({
+                        props: { scaleX: 4, scaleY: 4, alpha: 0 },
+                        time: 0.8,
+                        loop: false,
+                        rewind: false,
+                        call: () => {
+                            // Animation for activePiece and piece completed in series
+                            // Add any additional actions here
+                        }
+                    });
                 }
-            ]);
-            piece.removeFrom(stage);
+            });
+
+            // activePiece.animate([
+            //     {
+            //         props: 
+            //         {
+            //             x: piece.x,
+            //             y: piece.y// - 25
+            //         }
+            //     ,
+            //     time: 0.5,
+            //     events:true
+            //     }
+            // ]);
+
+            // //if (whitePawns.includes(activePiece)) {
+            //     piece.animate([
+            //         {
+            //             props: { scaleX: 4, scaleY: 4, alpha: 0 }, // Scale up and fade out
+            //             time: 0.5, // Duration of the animation in seconds
+            //             loop: false, // Play the animation only once
+            //             rewind: false, // Do not rewind the animation after it finishes
+            //             call: () => {
+            //                 // // Remove the note from the stage after the explosion animation
+            //                 // note.removeFrom(stage);
+            //                 // // Add the exploded note to the explodedNotes array
+            //                 // explodedNotes.push(note);
+            //                 // //console.log("Note exploded and stored:", note);
+            //     }
+            //         }
+            //     ]);
+
+            //}
+            stage.update();
+            //piece.removeFrom(stage);
             if(activePiece){
                 // Change the color of the previously selected piece back to its original color
                 activePiece.color = activePieceOriginalColor;
