@@ -230,27 +230,7 @@ function ready() {
         //);
     }
 
-        // ContainerWhite.push(
-        //     new Circle(40, white, black).pos(circleCoordinatesWhite[i].x*2 - 50*4.8, circleCoordinatesWhite[i].y-3*50)
-        //     .sha()
-        //     // .tap((event)=>{
-        //     //     if(activePiece){
-        //     //         if (activePieceOriginalColor == white) {
-        //     //             // Change the color of the previously selected piece back to its original color
-        //     //             activePiece.color = white;
-        //     //         }
-        //     //         else {
-        //     //             activePiece.color = dark;
-        //     //         }
-        //     //     }
-                      
-        //     //     activePiece = event.currentTarget;
-        //     //     activePiece.color = red;
-        //     //     activePieceOriginalColor = white; 
-        //     //     //event.currentTarget.color = red;
-        //     //     stage.update();
-        //     // })    
-        // );
+        
        
 
     for (let i = 0; i < rookCoordinatesWhite.length; i++){
@@ -315,15 +295,37 @@ function ready() {
                 handlePieceSelection(event.currentTarget, white);
             })
     );
+
+    //tiles[1].color = yellow;
+    stage.update;
         
     tiles.on("click", function(e){
         var point = tiles.localToGlobal(e.target.x, e.target.y);
         if (activePiece){
-            zog("Animating before changing game state");
 
             // // Calculate the distance to move
-            // let dx = (point.x-40) - activePiece.x;
-            // let dy = (point.y-75) - activePiece.y;
+            let dx = (point.x-40) - activePiece.x;
+            let dy = (point.y-75) - activePiece.y;
+
+            if (whitePawns.includes(activePiece)){
+                if ((dy**2 + dx**2) > 3600){
+                    // Animate the movement
+                    activePiece.animate([
+                        {
+                            props: 
+                            {
+                                x: point.x,
+                                y: point.y - 25
+                            }
+                        ,
+                        time: 0.5,
+                        events:true
+                        }
+                    ]);
+                }
+            }
+            zog("Animating before changing game state");
+
 
             // Animate the movement
             activePiece.animate([
@@ -479,35 +481,7 @@ function ready() {
                 }
             });
 
-            // activePiece.animate([
-            //     {
-            //         props: 
-            //         {
-            //             x: piece.x,
-            //             y: piece.y// - 25
-            //         }
-            //     ,
-            //     time: 0.5,
-            //     events:true
-            //     }
-            // ]);
-
-            // //if (whitePawns.includes(activePiece)) {
-            //     piece.animate([
-            //         {
-            //             props: { scaleX: 4, scaleY: 4, alpha: 0 }, // Scale up and fade out
-            //             time: 0.5, // Duration of the animation in seconds
-            //             loop: false, // Play the animation only once
-            //             rewind: false, // Do not rewind the animation after it finishes
-            //             call: () => {
-            //                 // // Remove the note from the stage after the explosion animation
-            //                 // note.removeFrom(stage);
-            //                 // // Add the exploded note to the explodedNotes array
-            //                 // explodedNotes.push(note);
-            //                 // //console.log("Note exploded and stored:", note);
-            //     }
-            //         }
-            //     ]);
+            
 
             //}
             stage.update();
