@@ -303,31 +303,52 @@ function ready() {
         var point = tiles.localToGlobal(e.target.x, e.target.y);
         if (activePiece){
 
-            // // Calculate the distance to move
-            let dx = (point.x-40) - activePiece.x;
-            let dy = (point.y-75) - activePiece.y;
+            // // // Calculate the distance to move
+            // let dx = (point.x- 40 - activePiece.x)/1;
+            // let dy = point.y- 75 - activePiece.y;
+            // let dxs = dx*dx;
+            // let dys = dy*dy;
+            // let globalXY = activePiece.localToGlobal(dx, dy);
+            // zog(globalXY + "globalXY");
+            // zog("dx: " + dx);
+            // zog("dy: " + dy);
+            // zog("dx^2: " + dx**2);
+            // zog("dy^2: " + dy**2);
+            // let pytha = dy**2 + dx**2;
+            // zog("dy^2 + dx^2 = " + pytha);
+            // zog(whitePawns);
+            // zog(activePiece);
+            // if (!whitePawns.includes(activePiece)){
+            //     zog("!whitePawns.includes(activePiece)");
+            // }
 
-            if (whitePawns.includes(activePiece)){
-                if ((dy**2 + dx**2) > 3600){
-                    // Animate the movement
-                    activePiece.animate([
-                        {
-                            props: 
-                            {
-                                x: point.x,
-                                y: point.y - 25
-                            }
-                        ,
-                        time: 0.5,
-                        events:true
-                        }
-                    ]);
-                }
-            }
-            zog("Animating before changing game state");
+            // //Create movement rules for white pawns
+            // if (whitePawns.includes(activePiece)){
+            //     zog("active piece is a white pawn.")
+            //     //zog(whitePawns);
+            //     //zog(activePiece);
+            //     if ((dy**2 + dx**2) < 40000){
+            //         zog("It's close enough");
+            //         // Animate the movement
+            //         activePiece.animate([
+            //             {
+            //                 props: 
+            //                 {
+            //                     x: point.x,
+            //                     y: point.y - 25
+            //                 }
+            //             ,
+            //             time: 0.5,
+            //             events:true
+            //             }
+            //         ]);
+            //     }
+                
+            // }
+            // zog("Animating before changing game state");
 
 
-            // Animate the movement
+            //Animate the movement
             activePiece.animate([
                 {
                     props: 
@@ -350,15 +371,15 @@ function ready() {
                 // // Check if the piece is not the active piece and is at the target square
                 // zog("piece: " + piece);
                 // zog("activePiece: " + activePiece);
-                 zog("piece.x: " + piece.x);
-                 zog("point.x: " + point.x);
-                 zog("piece.y: " + piece.y);
-                 zog("point.y: " + point.y);
-                 zog(piece !== activePiece);
-                 zog((piece.x - point.x)**2 < 200);
-                 zog((piece.y - point.y)**2 < 200);
+                //  zog("piece.x: " + piece.x);
+                //  zog("point.x: " + point.x);
+                //  zog("piece.y: " + piece.y);
+                //  zog("point.y: " + point.y);
+                //  zog(piece !== activePiece);
+                //  zog((piece.x - point.x)**2 < 200);
+                //  zog((piece.y - point.y)**2 < 200);
                  count += 1;
-                 zog("count: " + count);
+                //zog("count: " + count);
 
                 if ((piece !== activePiece) && ((piece.x - point.x)**2 < 200) && ((piece.y - point.y)**2 < 1600)) {
                     zog("Piece captured");
